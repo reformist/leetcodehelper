@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Leetcode Helper",
+  "version": "1.0",
+  "description": "A better way to Leetcode",
+  "permissions": ["activeTab"],
+  "action": {
+    "default_popup": "hello.html",
+    "default_icon": "leetcodehelperimg.png"
+  },
+"content_scripts": [
+    {
+      "matches": ["*://leetcode.com/problems/*"],
+      "js": ["content.js"]
+      
+    }
+  ]
+}
+
