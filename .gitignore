@@ -1,0 +1,5 @@
+# backend files to ignore
+webscraping/env
+webscraping/.env
+
+webscraping/__pycache__
