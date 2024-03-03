@@ -8,6 +8,18 @@
     "default_popup": "hello.html",
     "default_icon": "leetcodehelperimg.png"
   },
+  
+  "background": {
+    "service_worker": "background.js"
+  },
+
+    "icons": {
+      "16": "leetcodehelperimg.png",
+      "32": "leetcodehelperimg.png",
+      "48": "leetcodehelperimg.png",
+      "128": "leetcodehelperimg.png"
+    },
+  
 "content_scripts": [
     {
       "matches": ["*://leetcode.com/problems/*"],
