@@ -3,3 +3,6 @@ webscraping/env
 webscraping/.env
 
 webscraping/__pycache__
+
+backend/env
+backend/.env
