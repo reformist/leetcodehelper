@@ -10,6 +10,7 @@ chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
     url_parts = url.split('/');
     
     // console.log(url_parts) the problem is url_parts[4]
+    //
 
     problem = url_parts[4];
     console.log(problem);  
