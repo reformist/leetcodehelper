@@ -19,6 +19,10 @@
       "48": "leetcodehelperimg.png",
       "128": "leetcodehelperimg.png"
     },
+
+    "host_permissions": [
+      "*://leetcode.com/*"
+    ],
   
 "content_scripts": [
     {
