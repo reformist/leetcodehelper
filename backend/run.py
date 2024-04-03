@@ -218,7 +218,7 @@ def define_instructions():
     }
 
     output = json.dumps(output) # convert to JSON-readable string
-        
+    
     instructions = f'''
     Here are instructions for each of my subsequent queries. 
     
