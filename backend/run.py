@@ -144,6 +144,8 @@ def get_problem_description(name):
     # Parsing the response data to JSON
     data = response.json()
 
+    print(data)
+
     # Extracting the problem content (description) with HTML
     problem_content_html = data['data']['question']['content']
 
