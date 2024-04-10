@@ -51,3 +51,9 @@ python3 run.py
 Go to "frontend" folder
 
 npm start
+
+### Setup errors
+
+1. Need x-api-key in Postman
+2. Port number may be different for each comp
+3. 
