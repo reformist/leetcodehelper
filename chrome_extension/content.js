@@ -28,29 +28,23 @@ chrome.tabs.query({ active: true, lastFocusedWindow: true }, tabs => {
     console.log(tabs);
 
 
-    /** 
-    // Inject code to extract text from view-line elements
-    chrome.scripting.executeScript({
-      target: { tabId: tabs[0].id },
-      function: extractCodeFromViewLines,
-    });
 
-    */
 
-    extractCodeFromViewLines();
+    console.log("Reaches here");
+
+    
   }
 }); 
 */
 
-
-
-console.log("gets out of leetcode problem");
 // The function to extract code lines
 function extractCodeFromViewLines() {
 
   console.log("DEAR GOD HELP ME");
 
   const codeLines = document.querySelectorAll('.view-line');
+  console.log("goes into extractcode");
+  const codeLines = document.querySelector('.view-line');
   let code = '';
 
   // Iterate through each line except the last one
