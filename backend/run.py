@@ -41,6 +41,16 @@ url = 'https://leetcode.com/graphql'
 '''
 Test method
 '''
+
+
+@app.route('/', methods = ["GET"])
+def root():
+    return {
+        'test': True,
+    }
+
+
+
 @app.route('/test', methods=["GET"]) # GET request, with input params
 def test(): # when user submits a request to add event to calendar
     return {
@@ -143,6 +153,8 @@ def get_problem_description(name):
 
     # Parsing the response data to JSON
     data = response.json()
+
+    print(data)
 
     # Extracting the problem content (description) with HTML
     problem_content_html = data['data']['question']['content']
@@ -290,4 +302,4 @@ def generate(MESSAGES):
     return MESSAGES
 
 if __name__ == '__main__':
-   app.run(port=8000, debug=True)
+   app.run(port=8001, debug=True)
