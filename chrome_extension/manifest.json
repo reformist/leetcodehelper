@@ -1,35 +1,35 @@
 {
   "manifest_version": 3,
-  "name": "Leetcode Helper",
+  "name": "Leetcode Helper (new)",
   "version": "1.0",
   "description": "A better way to Leetcode",
-  "permissions": ["activeTab"],
+  "permissions": [
+    "activeTab"
+  ],
   "action": {
-    "default_popup": "hello.html", 
+    "default_popup": "hello.html",
     "default_icon": "leetcodehelperimg.png"
   },
-  
   "background": {
     "service_worker": "background.js"
   },
-
-    "icons": {
-      "16": "leetcodehelperimg.png",
-      "32": "leetcodehelperimg.png",
-      "48": "leetcodehelperimg.png",
-      "128": "leetcodehelperimg.png"
-    },
-
-    "host_permissions": [
-      "*://leetcode.com/*"
-    ],
-  
-"content_scripts": [
+  "icons": {
+    "16": "leetcodehelperimg.png",
+    "32": "leetcodehelperimg.png",
+    "48": "leetcodehelperimg.png",
+    "128": "leetcodehelperimg.png"
+  },
+  "host_permissions": [
+    "*://leetcode.com/*"
+  ],
+  "content_scripts": [
     {
-      "matches": ["*://leetcode.com/problems/*"],
-      "js": ["content.js"]
-      
+      "matches": [
+        "*://leetcode.com/problems/*"
+      ],
+      "js": [
+        "content.js"
+      ]
     }
   ]
 }
-
