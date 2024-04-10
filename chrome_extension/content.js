@@ -7,15 +7,15 @@ extractCodeFromViewLines();
 
 console.log(window.location.toString());
 
-/** 
+
 chrome.tabs.query({active: true, currentWindow: true}, tabs => {
   let url = tabs[0].url;
   console.log(url);
   // use `url` here inside the callback because it's asynchronous!
 });
-*/
 
-/**
+
+
 chrome.tabs.query({ active: true, lastFocusedWindow: true }, tabs => {
   let url = tabs[0].url;
   // Use `url` here inside the callback because it's asynchronous!
@@ -33,7 +33,7 @@ chrome.tabs.query({ active: true, lastFocusedWindow: true }, tabs => {
     
   }
 }); 
-*/
+
 
 // The function to extract code lines
 function extractCodeFromViewLines() {

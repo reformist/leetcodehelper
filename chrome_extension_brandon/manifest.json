@@ -1,0 +1,37 @@
+{
+    "manifest_version": 3,
+    "name": "God Tutorial",
+    "version": "1.0",
+    "description": "A better way to Leetcode",
+    "permissions": ["activeTab", "tabs", "scripting"],
+    
+    "action": {
+
+      "default_icon": "leetcodehelperimg.png"
+    },
+    
+    "background": {
+      "service_worker": "background.js"
+    },
+  
+    "icons": {
+        "16": "leetcodehelperimg.png",
+        "32": "leetcodehelperimg.png",
+        "48": "leetcodehelperimg.png",
+        "128": "leetcodehelperimg.png"
+    },
+  
+    "host_permissions": [
+        "*://leetcode.com/*"
+    ],
+    
+  "content_scripts": [
+      {
+        "matches": ["*://leetcode.com/problems/*"],
+        "js": ["content.js"]
+        
+      }
+    ]
+  }
+  
+  
