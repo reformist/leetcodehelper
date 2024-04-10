@@ -41,15 +41,11 @@ url = 'https://leetcode.com/graphql'
 '''
 Test method
 '''
-
-
 @app.route('/', methods = ["GET"])
 def root():
     return {
         'test': True,
     }
-
-
 
 @app.route('/test', methods=["GET"]) # GET request, with input params
 def test(): # when user submits a request to add event to calendar
@@ -62,7 +58,7 @@ Route to submit problem name, starting code
 
 Return the hints for the user
 '''
-@app.route('/hints', methods=["GET"]) # GET request, with input params
+@app.route('/hints', methods=["GET", "POST"]) # GET request, with input params
 def get_hints(): # when user submits a request to add event to calendar
     # Retrieve 'problem_name' from query parameters
     problem_name = request.args.get('problem_name', '')

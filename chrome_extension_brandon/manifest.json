@@ -3,10 +3,15 @@
     "name": "God Tutorial",
     "version": "1.0",
     "description": "A better way to Leetcode",
-    "permissions": ["activeTab", "tabs", "scripting"],
+    "permissions": [
+      "tabs",
+      "activeTab",
+      "scripting",
+      "storage"
+    ],
     
     "action": {
-
+      "default_popup": "popup.html",
       "default_icon": "leetcodehelperimg.png"
     },
     

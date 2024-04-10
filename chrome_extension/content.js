@@ -38,6 +38,7 @@ chrome.tabs.query({ active: true, lastFocusedWindow: true }, tabs => {
 
 
 // The function to extract code lines
+/** 
 function extractCodeFromViewLines() {
 
   console.log("DEAR GOD HELP ME");
