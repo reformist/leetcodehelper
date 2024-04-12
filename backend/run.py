@@ -259,7 +259,12 @@ def define_instructions():
     {output}
 
     Make sure to provide general hints to guide the user, DO NOT just give away the solution.
+    
+    Finally, make your hints as concise as possible (2-3 short sentences or less).
     '''
+
+    # for now, make it succint
+    # later want to separate hints into numbers
 
     return instructions
 
