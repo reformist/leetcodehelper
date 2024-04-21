@@ -18,7 +18,7 @@ import sys
 import base64
 
 # import statements
-from leetscrape import GetQuestionsList, GetQuestion, GenerateCodeStub, ExtractSolutions
+# from leetscrape import GetQuestionsList, GetQuestion, GenerateCodeStub, ExtractSolutions
 from bs4 import BeautifulSoup
 
 import requests
@@ -61,16 +61,18 @@ Return the hints for the user
 @app.route('/hints', methods=["GET", "POST"]) # GET request, with input params
 def get_hints(): # when user submits a request to add event to calendar
     # Retrieve 'problem_name' from query parameters
-    problem_name = request.args.get('problem_name', '')
+    problem_name = request.json.get('problem_name', '')
     problem_description = get_problem_description(problem_name)
     # problem_code = get_problem_code(problem_name)
-    problem_code = request.args.get('problem_code', '')
-
+    problem_code = request.json.get('problem_code', '')
     print(" ------------ PROBLEM DESCRIPTION ------------ ")
     print(problem_description)
 
     print(" ------------ PROBLEM CODE ------------ ")
-    print(problem_code)
+    # print(problem_code)
+    print(request.json.get('problem_code'))
+    # print(request.args)
+    # print(request.args.get('problem_name'))
 
     # Generate a response using GPT
 
@@ -81,6 +83,7 @@ def get_hints(): # when user submits a request to add event to calendar
     instructions = define_instructions()
     messages.append({'role': 'system', 'content': instructions})
     
+   
     # user message
     message = f'''
     Provide me with hints for this problem:
@@ -93,9 +96,13 @@ def get_hints(): # when user submits a request to add event to calendar
 
     {problem_code}
     '''
-
+    print("------msg that's fed to chatgpt")
+    print(message)
     message = {'role': 'user', 'content': message} # roles - user, assistant
     messages.append(message)
+
+    print("entire message sent to gpt")
+    print(messages)
 
     # generate new response from gpt
     new_messages = generate(messages)
@@ -260,7 +267,7 @@ def define_instructions():
     {output}
 
     Make sure to provide general hints to guide the user, DO NOT just give away the solution.
-    
+    Acknowledge what the user has coded so far (VERY IMPORTANT), and build advice on top of it if there's code beyond just the problem statement.
     Finally, make your hints as concise as possible (2-3 short sentences or less).
     '''
 
