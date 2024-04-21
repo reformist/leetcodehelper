@@ -43,9 +43,12 @@ Test method
 '''
 @app.route('/', methods = ["GET"])
 def root():
+    return "Flask heroku app"
+    '''
     return {
         'test': True,
     }
+    '''
 
 @app.route('/test', methods=["GET"]) # GET request, with input params
 def test(): # when user submits a request to add event to calendar
@@ -304,4 +307,5 @@ def generate(MESSAGES):
     return MESSAGES
 
 if __name__ == '__main__':
-   app.run(port=8001, debug=True)
+   # app.run(port=8001, debug=True)
+   app.run()
