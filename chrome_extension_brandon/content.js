@@ -38,6 +38,7 @@ async function gotMessage(message, sender, sendResponse) {
     if (problem && code) {
 
         const BACKEND_URL = 'https://beetcode-deploy-c7a83262de6a.herokuapp.com/hints?problem_name=' + problem;
+        // const BACKEND_URL = 'http://127.0.0.1:5000/hints?problem_name=' + problem;
 
         try {
             const response = await fetch(BACKEND_URL, {

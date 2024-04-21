@@ -35,6 +35,8 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 
 # constant variables
 
+version = 1.1
+
 # The GraphQL endpoint URL
 url = 'https://leetcode.com/graphql'
 
@@ -60,6 +62,9 @@ Return the hints for the user
 '''
 @app.route('/hints', methods=["GET", "POST"]) # GET request, with input params
 def get_hints(): # when user submits a request to add event to calendar
+
+    print("VERSION: " + str(version))
+    
     # Retrieve 'problem_name' from query parameters
     problem_name = request.args.get('problem_name', '')
     problem_description = get_problem_description(problem_name)
