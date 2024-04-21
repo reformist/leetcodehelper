@@ -4,5 +4,7 @@ webscraping/.env
 
 webscraping/__pycache__
 
+env
+.env
 backend/env
 backend/.env
