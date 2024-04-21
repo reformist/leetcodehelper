@@ -63,7 +63,8 @@ def get_hints(): # when user submits a request to add event to calendar
     # Retrieve 'problem_name' from query parameters
     problem_name = request.args.get('problem_name', '')
     problem_description = get_problem_description(problem_name)
-    problem_code = get_problem_code(problem_name)
+    # problem_code = get_problem_code(problem_name)
+    problem_code = request.args.get('problem_code', '')
 
     print(" ------------ PROBLEM DESCRIPTION ------------ ")
     print(problem_description)
