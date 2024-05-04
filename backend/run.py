@@ -70,12 +70,13 @@ def get_hints(): # when user submits a request to add event to calendar
     problem_description = get_problem_description(problem_name)
     # problem_code = get_problem_code(problem_name)
     problem_code = request.json.get('problem_code', '')
+
     print(" ------------ PROBLEM DESCRIPTION ------------ ")
     print(problem_description)
 
     print(" ------------ PROBLEM CODE ------------ ")
-    # print(problem_code)
-    print(request.json.get('problem_code'))
+    print(problem_code)
+
     # print(request.args)
     # print(request.args.get('problem_name'))
 
@@ -316,5 +317,5 @@ def generate(MESSAGES):
     return MESSAGES
 
 if __name__ == '__main__':
-   # app.run(port=8001, debug=True)
-   app.run()
+   app.run(port=8001, debug=True)
+   # app.run()
