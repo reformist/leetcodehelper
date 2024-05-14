@@ -299,9 +299,10 @@ def generate(MESSAGES):
     )
 
     # MODEL = 'gpt-3.5-turbo-1106'
-    MODEL = 'gpt-4-turbo'
+    # MODEL = 'gpt-4-turbo'
     # MODEL = 'gpt-4-turbo-preview' # UPGRADING TO GPT 4, can use the turbo version later on
     # model = 'gpt-3.5-turbo' # can try with gpt 4 later
+    MODEL="gpt-4o"
 
     try:
         response = client.chat.completions.create(
