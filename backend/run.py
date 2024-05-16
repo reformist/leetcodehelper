@@ -103,7 +103,7 @@ def get_hints(): # when user submits a request to add event to calendar
 
     print("------msg that's fed to chatgpt")
     print(message)
-    
+
     message = {'role': 'user', 'content': message} # roles - user, assistant
     messages.append(message)
 
@@ -236,7 +236,7 @@ Initial instructions for GPT
 def define_instructions():
 
     output = {
-        "hint": "Let's first break down the known parameters. We have two lists (nums1, nums2) and two numbers (m, n) indicating the size of those lists. How can we use this information to iterate over the elements?"
+        "hints": "Let's first break down the known parameters. We have two lists (nums1, nums2) and two numbers (m, n) indicating the size of those lists. How can we use this information to iterate over the elements?"
     }
 
     output = json.dumps(output) # convert to JSON-readable string
