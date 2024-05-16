@@ -64,13 +64,14 @@ def get_hints(): # when user submits a request to add event to calendar
     problem_name = request.json.get('problem_name', '')
     problem_description = get_problem_description(problem_name)
     # problem_code = get_problem_code(problem_name)
-    problem_code = request.json.get('problem_code', '')
+    current_code = request.json.get('problem_code', '')
+
     print(" ------------ PROBLEM DESCRIPTION ------------ ")
     print(problem_description)
 
     print(" ------------ PROBLEM CODE ------------ ")
-    # print(problem_code)
-    print(request.json.get('problem_code'))
+    print(current_code)
+
     # print(request.args)
     # print(request.args.get('problem_name'))
 
@@ -86,18 +87,18 @@ def get_hints(): # when user submits a request to add event to calendar
    
     # user message
     message = f'''
-    Provide me with hints for this problem:
+    Provide me with a hint for this problem:
 
     Problem Description:
-
     {problem_description}
 
-    Starting Code:
-
-    {problem_code}
+    Current Code:
+    {current_code}
     '''
+
     print("------msg that's fed to chatgpt")
     print(message)
+
     message = {'role': 'user', 'content': message} # roles - user, assistant
     messages.append(message)
 
@@ -230,28 +231,26 @@ Initial instructions for GPT
 def define_instructions():
 
     output = {
-	    "hints": "Let's first break down the known parameters. We have two lists (nums1, nums2) and two numbers (m, n) indicating the size of those lists. How can we use this information to iterate over the elements?"
+        "hints": "Let's first break down the known parameters. We have two lists (nums1, nums2) and two numbers (m, n) indicating the size of those lists. How can we use this information to iterate over the elements?"
     }
 
     output = json.dumps(output) # convert to JSON-readable string
-    
-    instructions = f'''
-    Here are instructions for each of my subsequent queries. 
-    
-    You will provide hints on how to tackle a particular coding problem. Return a JSON response. Here is an example of an input, output pair:
 
-    Input:
+    instructions = f'''
+    You will provide a hint on how to tackle a Leetcode coding problem. The input is the problem name, description, and user's current code. The JSON output is your hint. 
+
+    Make sure to provide a hint to guide the user, DO NOT just give away the solution. Consider what the user has coded so far (VERY IMPORTANT), and build advice on top of it. Finally, make your hints as concise as possible (2-3 short sentences or less).
+
+    Here is an example:
 
     Problem Description:
-
     You are given two integer arrays nums1 and nums2, sorted in non-decreasing order, and two integers m and n, representing the number of elements in nums1 and nums2 respectively.
 
     Merge nums1 and nums2 into a single array sorted in non-decreasing order.
 
     The final sorted array should not be returned by the function, but instead be stored inside the array nums1. To accommodate this, nums1 has a length of m + n, where the first m elements denote the elements that should be merged, and the last n elements are set to 0 and should be ignored. nums2 has a length of n.
 
-    Starting Code:
-
+    Current Code:
     class Solution(object):
         def merge(self, nums1, m, nums2, n):
             """
@@ -262,13 +261,8 @@ def define_instructions():
             :rtype: None Do not return anything, modify nums1 in-place instead.
             """
 
-    Output:
-
+    Your Hint:
     {output}
-
-    Make sure to provide general hints to guide the user, DO NOT just give away the solution.
-    Acknowledge what the user has coded so far (VERY IMPORTANT), and build advice on top of it if there's code beyond just the problem statement.
-    Finally, make your hints as concise as possible (2-3 short sentences or less).
     '''
 
     # for now, make it succint

@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (data.hint) {
             document.getElementById('hintContainer').textContent = data.hint;
         } else {
-            document.getElementById('hintContainer').textContent = "No hint available";
+            document.getElementById('hintContainer').textContent = "No hint available!";
         }
     });
 });
