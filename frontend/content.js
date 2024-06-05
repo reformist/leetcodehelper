@@ -1,4 +1,4 @@
-console.log("content script loaded");
+console.log("content script loaded - v2");
 
 chrome.runtime.onMessage.addListener(gotMessage);
 
@@ -36,7 +36,7 @@ async function gotMessage(message, sender, sendResponse) {
 
     // Check if 'problem' is not empty and 'code' has content
     if (problem && code) {
-
+        
         // const BACKEND_URL = 'https://beetcode-deploy-c7a83262de6a.herokuapp.com/hints?problem_name=' + problem;
         const BACKEND_URL = 'http://127.0.0.1:8001/hints?problem_name=' + problem;
 
@@ -51,11 +51,13 @@ async function gotMessage(message, sender, sendResponse) {
                     problem_code: code,
                 }),
             });
+
             const data = await response.json(); // Assuming your server responds with JSON
-            // console.log('Server response:', data);
+            
+            console.log('Server response:', data);
 
             let GPT_response = JSON.parse(data.response);
-            let hint = GPT_response.hints;
+            let hint = GPT_response.hint; // this is where you get it from the JSON
 
             console.log('Hint:', hint);
             
