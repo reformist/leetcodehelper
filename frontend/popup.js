@@ -48,6 +48,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    document.getElementById('upVote').addEventListener('click', function() {
+
+
+
+    });
+
+    document.getElementById('downVote').addEventListener('click', function(){
+
+    });
+
     chrome.storage.local.get('hint', function(data) {
         if (data.hint) {
             document.getElementById('hintContainer').textContent = data.hint;
