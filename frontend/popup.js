@@ -35,6 +35,14 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.getElementById('triggerAction').addEventListener('click', function() {
+
+        // when a new hint is generated, we want to erase the like/dislike color
+        const upVoteButton = document.getElementById('upVote');
+        const downVoteButton = document.getElementById('downVote');
+        
+        upVoteButton.style.backgroundColor = "#007BFF"
+        downVoteButton.style.backgroundColor = "#007BFF"
+        
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
             // Extract the URL of the current tab
             let currentTab = tabs[0];
@@ -63,6 +71,18 @@ document.addEventListener('DOMContentLoaded', function() {
         //how to get the hint from chrome storage--just using the below function
 
         console.log("UPVOTE");
+
+        const upVoteButton = document.getElementById('upVote');
+        const downVoteButton = document.getElementById('downVote');
+
+        if (upVoteButton.style.backgroundColor === "green") { // user clicks it again
+            upVoteButton.style.backgroundColor = "#007BFF"
+        }
+        else {
+            upVoteButton.style.backgroundColor = "green"
+            downVoteButton.style.backgroundColor = "#007BFF"
+        }
+        
 
         chrome.storage.local.get('hint', function(data) {
             if (data.hint) { // if there is a hint
@@ -97,6 +117,17 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('downVote').addEventListener('click', function() {
 
         console.log("DOWNVOTE");
+
+        const upVoteButton = document.getElementById('upVote');
+        const downVoteButton = document.getElementById('downVote');
+
+        if (downVoteButton.style.backgroundColor === "green") { // user clicks it again
+            downVoteButton.style.backgroundColor = "#007BFF"
+        }
+        else {
+            downVoteButton.style.backgroundColor = "green"
+            upVoteButton.style.backgroundColor = "#007BFF"
+        }
 
         chrome.storage.local.get('hint', function(data) {
             if (data.hint) {

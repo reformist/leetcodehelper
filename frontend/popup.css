@@ -44,3 +44,8 @@ button:hover {
     border:2px solid black
 
 }
+
+.clicked {
+    background-color: green;
+    color: white;
+}
