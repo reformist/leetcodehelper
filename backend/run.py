@@ -24,18 +24,6 @@ from bs4 import BeautifulSoup
 import requests
 import json
 
-import os
-from supabase import create_client, Client
-
-from dotenv import load_dotenv, find_dotenv
-
-import pandas as pd
-
-import openai
-
-import pymongo
-from pymongo import MongoClient
-
 # test change
 
 load_dotenv(find_dotenv())
@@ -44,24 +32,10 @@ app = Flask(__name__)
 # CORS(app, resources={r"/*": {"origins": ["http://localhost:5000", "http://localhost:3000"]}}) # same port number
 CORS(app, resources={r"/*": {"origins": "*"}})
 
+
 # constant variables
 
-url: str = os.getenv('SUPABASE_URL')
-key: str = os.getenv('SUPABASE_KEY')
-
-TABLE_NAME = 'hints'
-
-RATING_THRESHOLD = 0 # just needs to be greater than 0
-
-openai.api_key = os.getenv('OPENAI_API_KEY')
-
-EMBEDDING_MODEL = "text-embedding-3-small"
-
-MONGO_PASSWORD = os.getenv('MONGO_PASS')
-
-COSINE_THRESHOLD = 0.85 # a very close match was 0.94, bad was 0.75
-# if above this, then "good match"
-# otherwise, bad match
+version = 1.1
 
 # The GraphQL endpoint URL
 url = 'https://leetcode.com/graphql'
@@ -81,159 +55,27 @@ def test(): # when user submits a request to add event to calendar
         'success': True,
     }
 
-# internal method
-def get_embedding(text):
-    """Generate an embedding for the given text using OpenAI's API."""
-
-    # Check for valid input
-    if not text or not isinstance(text, str):
-        return None
-
-    try:
-        # Call OpenAI API to get the embedding
-        embedding = openai.embeddings.create(input=text, model=EMBEDDING_MODEL).data[0].embedding
-        return embedding
-    except Exception as e:
-        print(f"Error in get_embedding: {e}")
-        return None
-
-# call this to set up database connections
-# internal method
-def update_embeddings():
-    supabase: Client = create_client(url, key)
-
-    # Fetch data from the table
-    data = supabase.table("hints").select("*").execute()
-    full_data = data.data
-    # print(full_data)  # Outputs the fetched data
-
-    supa_df = pd.DataFrame(full_data)
-
-    # Now you can work with 'df' as a pandas DataFrame
-    print(supa_df.head())
-
-    # Database cleanup
-    print("\nNumber of rows, columns:", supa_df.shape)
-
-    # Remove data point where hint coloumn is missing
-    supa_df = supa_df.dropna(subset=['hint'])
-
-    # remove the plot_embedding from each data point in the dataset as we are going to create new embeddings with the new OpenAI emebedding Model "text-embedding-3-small"
-    supa_df = supa_df.drop(columns=['hint_embedding'])
-    # supa_df.head(5)
-
-    # Step 1: Combine the columns
-    supa_df["combined_text"] = supa_df.apply(lambda row: f"{row['problem_name']} {row['code']} {row['hint']}", axis=1)
-
-    # Step 2: Generate the embeddings for the combined text
-    supa_df["hint_embedding"] = supa_df["combined_text"].apply(get_embedding) # use the get_embedding method above
-
-    # Drop the combined_text column if not needed anymore
-    supa_df.drop(columns=["combined_text"], inplace=True)
-
-    # MONGO DB connection
-
-    # connection_string = f'mongodb+srv://beetcodeai:{MONGO_PASSWORD}@beetcode.mcyrpag.mongodb.net/?retryWrites=true&w=majority&appName=Beetcode'
-    connection_string = f'mongodb+srv://beetcodeai:{MONGO_PASSWORD}@cluster0.yuiy7jk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
-
-    # DATABASE_NAME = 'mvp'
-    # COLLECTION_NAME = 'hints'
-
-    client = MongoClient(connection_string)
-
-    try:
-        print("Connected")
-        # client.close()
-
-    except Exception as e:
-        raise Exception(
-            "The following error occurred: ", e)
-
-    # now try inserting a new collection
-
-    # Ingest data into MongoDB
-    db = client['hints']
-    collection = db['hint_collection']
-
-    # Delete any existing records in the collection
-    collection.delete_many({})
-
-    documents = supa_df.to_dict('records')
-    collection.insert_many(documents)
-
-    print("Data ingestion into MongoDB completed")
-
-    # DO NOT close client at the end
-    # client.close()
-    return supabase, collection
-
-# internal method
-def vector_search(user_query, collection):
-    """
-    Perform a vector search in the MongoDB collection based on the user query.
-
-    Args:
-    user_query (str): The user's query string.
-    collection (MongoCollection): The MongoDB collection to search.
-
-    Returns:
-    list: A list of matching documents.
-    """
-
-    # Generate embedding for the user query
-    query_embedding = get_embedding(user_query)
-
-    if query_embedding is None:
-        return "Invalid query or embedding generation failed."
-
-    # Define the vector search pipeline
-    pipeline = [
-        {
-            "$vectorSearch": {
-                "index": "vector_index",
-                "queryVector": query_embedding,
-                "path": "hint_embedding",
-                "numCandidates": 150,  # Number of candidate matches to consider
-                "limit": 1  # Return top 1 matches
-            }
-        },
-        {
-            "$project": {
-                "_id": 0,  # Exclude the _id field
-                "problem_name": 1,  # Include the plot field
-                "code": 1,  # Include the title field
-                "hint": 1, # Include the genres field
-                "rating": 1, # Include the genres field
-                "score": {
-                    "$meta": "vectorSearchScore"  # Include the search score
-                }
-            }
-        }
-    ]
-
-    # Execute the search
-    results = collection.aggregate(pipeline)
-    return list(results)
-
-
 '''
 Route to submit problem name, starting code
 
 Return the hints for the user
-''' 
-@app.route('/hints', methods=["GET", "POST"]) # POST request, with body
+'''
+@app.route('/hints', methods=["GET", "POST"]) # GET request, with input params
 def get_hints(): # when user submits a request to add event to calendar
+
+    print("VERSION: " + str(version))
+
     # Retrieve 'problem_name' from query parameters
     problem_name = request.json.get('problem_name', '')
     problem_description = get_problem_description(problem_name)
     # problem_code = get_problem_code(problem_name)
-    current_code = request.json.get('problem_code', '')
+    problem_code = request.json.get('problem_code', '')
 
     print(" ------------ PROBLEM DESCRIPTION ------------ ")
     print(problem_description)
 
     print(" ------------ PROBLEM CODE ------------ ")
-    print(current_code)
+    print(problem_code)
 
     # print(request.args)
     # print(request.args.get('problem_name'))
@@ -269,12 +111,8 @@ def get_hints(): # when user submits a request to add event to calendar
     print(messages)
 
     # generate new response from gpt
-    new_messages, source_info = generate(messages)
-    # print(new_messages)
+    new_messages = generate(messages)
     response = new_messages[-1]['content'].strip() # take the last (most recent) message
-
-    print(f"Response: {response}")
-    print(f"Source Information: \n{source_info}")
 
     try:
         return {
@@ -402,7 +240,7 @@ def define_instructions():
     }
 
     output = json.dumps(output) # convert to JSON-readable string
-
+    
     instructions = f'''
     You will provide a hint on how to tackle a Leetcode coding problem. The input is the problem name, description, and user's current code. The JSON output is your hint. 
 
@@ -438,6 +276,9 @@ def define_instructions():
     return instructions
 
 '''
+Generate a new response using GPT
+'''
+'''
 New method using gpt-4 turbo and JSON mode
 '''
 def generate(MESSAGES):
@@ -470,20 +311,6 @@ def generate(MESSAGES):
 
     return MESSAGES
 
-# Now build the logic for like/dislike
-
-@app.route('/edit_rating', methods=["GET", "POST"]) # NVM ITS A POST REQUEST
-def edit_rating():
-    hint_generated = request.json.get('hint_generated', '')
-    # problem_name = request.json.get('problem_name', '') DO NOT NEED PROBLEM NAME ANYMORE
-    # current_code = request.json.get('problem_code', '')
-    
-    rating_change = request.json.get('like', '')
-    rating_change = int(rating_change)
-
-    return {
-        'success': True
-    }
-
 if __name__ == '__main__':
    app.run(port=8001, debug=True)
+   # app.run()
