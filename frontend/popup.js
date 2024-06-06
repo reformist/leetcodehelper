@@ -56,6 +56,50 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    document.getElementById('upVote').addEventListener('click', function() {
+        // console.log("test2");
+        //how to get the hint from chrome storage--just using the below function
+
+        chrome.storage.local.get('hint', function(data) {
+            if (data.hint) {
+
+                // just using dev env right now for backend_url
+                const BACKEND_URL = 'http://127.0.0.1:8001/edit_rating';
+                fetch(BACKEND_URL, { // not sure what to put here
+                    method: 'POST',
+                    body: JSON.stringify({
+                        hint_generated: data.hint,
+                        problem_name: "two-sum", //hard coded for now just to see if other information works
+                        like: 1
+
+                    })
+                })
+                    .then(res => {
+                        res = res.json();
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+                
+            } else {
+                console.log("upvote occured without a hint");
+            }
+        });
+
+    });
+
+    document.getElementById('downVote').addEventListener('click', function(){
+        // downvote logic should be the same as upvote logic if it works
+        if (data.hint) {
+            
+
+        }
+        else {
+            console.log("upVote occured without available hint.")
+        }
+
+    });
+
     chrome.storage.local.get('hint', function(data) {
         if (data.hint) {
             document.getElementById('hintContainer').textContent = data.hint;
