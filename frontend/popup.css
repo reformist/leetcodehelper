@@ -21,8 +21,9 @@ body {
     background-color: #f0f0f0;
 }
 #buttonContainer {
+    font-size:12px;
     display: flex;
-    gap: 10px;
+    gap: 8px;
 }
 button {
     padding: 5px 10px;
@@ -30,8 +31,17 @@ button {
     border-radius: 5px;
     cursor: pointer;
     background-color: #007BFF;
+    border:2px solid black;
     color: white;
 }
 button:hover {
     background-color: #0056b3;
+    border:2px solid black
 }
+
+#like:hover{
+    background-color: #0056b3;
+    border:2px solid black
+
+}
+
