@@ -52,11 +52,81 @@ document.addEventListener('DOMContentLoaded', function() {
         if (data.hint) {
             document.getElementById('hintContainer').textContent = data.hint;
         } else {
-            document.getElementById('hintContainer').textContent = "No hint available!";
+            document.getElementById('hintContainer').textContent = "No hint available";
         }
     });
-});
 
+    // upvote / downvote buttons
+
+    document.getElementById('upVote').addEventListener('click', function() {
+        // console.log("test2");
+        //how to get the hint from chrome storage--just using the below function
+
+        console.log("UPVOTE");
+
+        chrome.storage.local.get('hint', function(data) {
+            if (data.hint) { // if there is a hint
+
+                // just using dev env right now for backend_url
+                const BACKEND_URL = 'http://127.0.0.1:8001/edit_rating';
+                fetch(BACKEND_URL, { // not sure what to put here
+                    method: 'POST',
+                    body: JSON.stringify({
+                        hint_generated: data.hint,
+                        // problem_name: "two-sum", //hard coded for now just to see if other information works
+                        like: 1
+                    }),
+                    mode: 'no-cors'
+                })
+                .then(response => response.json())  // Parse the response as JSON (shouldn't matter)
+                .then(data => {
+                    console.log('Success:', data);
+                })
+                .catch(err => {
+                    console.error('Error:', err);
+                });
+                
+            } else {
+                console.log("upvote occured without a hint");
+            }
+        });
+
+    });
+
+    
+    document.getElementById('downVote').addEventListener('click', function() {
+
+        console.log("DOWNVOTE");
+
+        chrome.storage.local.get('hint', function(data) {
+            if (data.hint) {
+                const BACKEND_URL = 'http://127.0.0.1:8001/edit_rating';
+                fetch(BACKEND_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'  // Add headers for JSON
+                    },
+                    body: JSON.stringify({
+                        hint_generated: data.hint,
+                        problem_name: "two-sum",  // Hardcoded for now
+                        like: -1
+                    })
+                })
+                .then(response => response.json())  // Parse the response as JSON
+                .then(data => {
+                    console.log('Success:', data);
+                })
+                .catch(err => {
+                    console.error('Error:', err);
+                });
+            } else {
+                console.log("Downvote occurred without a hint");
+            }
+        });
+    });
+
+
+});
 /*
 chrome.storage.local.get('hint', function(data) {
     if (data.hint) {

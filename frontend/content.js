@@ -1,4 +1,4 @@
-console.log("content script loaded");
+console.log("content script loaded - V4");
 
 chrome.runtime.onMessage.addListener(gotMessage);
 
@@ -55,7 +55,7 @@ async function gotMessage(message, sender, sendResponse) {
             // console.log('Server response:', data);
 
             let GPT_response = JSON.parse(data.response);
-            let hint = GPT_response.hints;
+            let hint = GPT_response.hint;
 
             console.log('Hint:', hint);
             
