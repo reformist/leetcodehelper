@@ -24,6 +24,18 @@ from bs4 import BeautifulSoup
 import requests
 import json
 
+import os
+from supabase import create_client, Client
+
+from dotenv import load_dotenv, find_dotenv
+
+import pandas as pd
+
+import openai
+
+import pymongo
+from pymongo import MongoClient
+
 # test change
 
 load_dotenv(find_dotenv())
