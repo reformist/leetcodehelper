@@ -50,6 +50,7 @@ async function gotMessage(message, sender, sendResponse) {
                     problem_name: problem,
                     problem_code: code,
                 }),
+                mode: 'no-cors',
             });
             const data = await response.json(); // Assuming your server responds with JSON
             // console.log('Server response:', data);

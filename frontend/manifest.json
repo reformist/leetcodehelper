@@ -4,7 +4,9 @@
   "version": "1.0",
   "description": "A better way to Leetcode",
   "permissions": [
+    "tabs",
     "activeTab",
+    "scripting",
     "storage"
   ],
   "action": {
@@ -20,6 +22,11 @@
     "48": "beet-icon-57-64x64.png",
     "128": "beetcode_128_128.jpg"
   },
+  
+  "host_permissions": [
+    "*://leetcode.com/*"
+  ],
+
   "content_scripts": [
     {
       "matches": [
