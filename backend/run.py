@@ -221,7 +221,7 @@ Route to submit problem name, starting code
 
 Return the hints for the user
 ''' 
-@app.route('/hints', methods=["GET", "POST"]) # GET request, with input params
+@app.route('/hints', methods=["GET", "POST"]) # POST request, with body
 def get_hints(): # when user submits a request to add event to calendar
     # Retrieve 'problem_name' from query parameters
     problem_name = request.json.get('problem_name', '')
@@ -503,7 +503,7 @@ def generate(MESSAGES):
 # Now build the logic for like/dislike
 
 # if the user hits the "like" endpoint here
-@app.route('/edit_rating', methods=["GET"]) # GET request, with input params
+@app.route('/edit_rating', methods=["GET", "POST"]) # NVM ITS A POST REQUEST
 def edit_rating():
     # get the hint generated from FE
     hint_generated = request.json.get('hint_generated', '')

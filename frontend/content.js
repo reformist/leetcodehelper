@@ -1,4 +1,4 @@
-console.log("content script loaded - v2");
+console.log("content script loaded - v3");
 
 chrome.runtime.onMessage.addListener(gotMessage);
 
@@ -39,6 +39,9 @@ async function gotMessage(message, sender, sendResponse) {
         
         // const BACKEND_URL = 'https://beetcode-deploy-c7a83262de6a.herokuapp.com/hints?problem_name=' + problem;
         const BACKEND_URL = 'http://127.0.0.1:8001/hints?problem_name=' + problem;
+        // const BACKEND_URL = 'http://127.0.0.1:8001/hints'
+        
+        // why is problem_name passed into the URL
 
         try {
             const response = await fetch(BACKEND_URL, {
