@@ -1,4 +1,4 @@
-console.log("content script loaded");
+console.log("content script loaded - V7");
 
 chrome.runtime.onMessage.addListener(gotMessage);
 
@@ -50,13 +50,13 @@ async function gotMessage(message, sender, sendResponse) {
                     problem_name: problem,
                     problem_code: code,
                 }),
-                mode: 'no-cors',
+                // mode: 'no-cors'
             });
             const data = await response.json(); // Assuming your server responds with JSON
             // console.log('Server response:', data);
 
             let GPT_response = JSON.parse(data.response);
-            let hint = GPT_response.hints;
+            let hint = GPT_response.hint;
 
             console.log('Hint:', hint);
             

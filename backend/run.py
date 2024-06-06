@@ -256,7 +256,7 @@ def get_hints(): # when user submits a request to add event to calendar
     {problem_description}
 
     Current Code:
-    {current_code}
+    {problem_code}
     '''
 
     print("------msg that's fed to chatgpt")
@@ -398,7 +398,7 @@ Initial instructions for GPT
 def define_instructions():
 
     output = {
-        "hints": "Let's first break down the known parameters. We have two lists (nums1, nums2) and two numbers (m, n) indicating the size of those lists. How can we use this information to iterate over the elements?"
+        "hint": "Let's first break down the known parameters. We have two lists (nums1, nums2) and two numbers (m, n) indicating the size of those lists. How can we use this information to iterate over the elements?"
     }
 
     output = json.dumps(output) # convert to JSON-readable string
@@ -431,15 +431,12 @@ def define_instructions():
     Your Hint:
     {output}
     '''
-
+    
     # for now, make it succint
     # later want to separate hints into numbers
 
     return instructions
 
-'''
-Generate a new response using GPT
-'''
 '''
 New method using gpt-4 turbo and JSON mode
 '''
@@ -454,113 +451,36 @@ def generate(MESSAGES):
     )
 
     # MODEL = 'gpt-3.5-turbo-1106'
+    # MODEL = 'gpt-4-turbo'
     # MODEL = 'gpt-4-turbo-preview' # UPGRADING TO GPT 4, can use the turbo version later on
     # model = 'gpt-3.5-turbo' # can try with gpt 4 later
-    MODEL = "gpt-4o"
-
-    query = MESSAGES[-1]['content'].strip() # most recent message is the user query
-
-    _, collection = update_embeddings()
-
-    get_knowledge = vector_search(query, collection)
-
-    search_result = ''
-    rating = 0
-
-    for result in get_knowledge: # should just be one item
-        search_result += f'''Problem: {result.get('problem_name', 'N/A')} \n\nCode: {result.get('code', 'N/A')} \n\nHint: {result.get('hint', 'N/A')} \n\n'''
-        
-        score = result.get('score', 'N/A')
-        rating = result.get('rating', 'N/A')
-        print("Search Score: " + str(score))
-
-    # now check if the rating is above a certain threshold
-    # if so, then add to the prompt
-
-    if rating > RATING_THRESHOLD: # hint was liked by someone
-        # now overwrite the query in the list
-        MESSAGES[-1]['content'] += f'''\n\nPlease answer this user query with the following context: \n\n{search_result}
-        '''
-
-    print(f"New Query: \n{MESSAGES[-1]['content']}")
+    MODEL = 'gpt-4o'
 
     try:
-        completion = client.chat.completions.create(
+        response = client.chat.completions.create(
             model=MODEL,
+            response_format={ "type": "json_object" }, # valid for gpt 4o
             messages=MESSAGES
         )
 
-        MESSAGES.append({'role': completion.choices[0].message.role, 'content': completion.choices[0].message.content})
-
-        # print("Assistant: " + completion.choices[0].message.content)
-    
+        MESSAGES.append({'role': response.choices[0].message.role, 'content': response.choices[0].message.content})
     except openai.APIError as e:
         #Handle API error here, e.g. retry or log
         print(f"OpenAI API returned an API Error: {e}")
 
-    return MESSAGES, search_result
+    return MESSAGES
 
 # Now build the logic for like/dislike
 
-# if the user hits the "like" endpoint here
 @app.route('/edit_rating', methods=["GET", "POST"]) # NVM ITS A POST REQUEST
 def edit_rating():
-    # get the hint generated from FE
     hint_generated = request.json.get('hint_generated', '')
-    problem_name = request.json.get('problem_name', '')
-    current_code = request.json.get('problem_code', '')
+    # problem_name = request.json.get('problem_name', '') DO NOT NEED PROBLEM NAME ANYMORE
+    # current_code = request.json.get('problem_code', '')
     
     rating_change = request.json.get('like', '')
     rating_change = int(rating_change)
 
-    # like must be 1 for true (like)
-    # or -1 for false (dislike)
-
-    # example: "Let’s first break down the known parameters. We have two lists (nums1, nums2) and two numbers (m, n) indicating the size of those lists. How can we use this information to iterate over the elements?"
-    supabase, collection = update_embeddings()
-    
-    get_knowledge = vector_search(hint_generated, collection)
-    
-    # NEED TO SET UP COLLECTION FOR MONGODB!!!
-
-    for result in get_knowledge: # should just be one item
-        # search_result += f'''Problem: {result.get('problem_name', 'N/A')} \n\nCode: {result.get('code', 'N/A')} \n\nHint: {result.get('hint', 'N/A')} \n\n'''
-        
-        score = result.get('score', 'N/A')
-        print("Closest Search Score: " + str(score))
-
-        if score <= COSINE_THRESHOLD: # then no close match
-            # add problem, code, hint to DB (supabase)
-            # make the rating equal to 1, -1
-
-            data, count = supabase.table('hints').insert({"problem_name": problem_name,
-                                                          "code": current_code,
-                                                          "hint": hint_generated,
-                                                          "rating": rating_change}).execute()
-
-            # now re-run the method that generates the embeddings and saves in the MongoDB database
-            _,_ = update_embeddings()
-                        
-        else:
-            # there is a close match, so identify the 3 relevant params (problem name, code, hint)
-            problem_name = result.get('problem_name', 'N/A')
-            code = result.get('code', 'N/A')
-            hint = result.get('hint', 'N/A')
-            rating = result.get('rating', 'N/A')
-
-            # Increment or decrement the rating value
-            new_rating = rating + rating_change
-
-            # Update the table with the new rating
-            data, count = (
-                supabase.table('hints')
-                .update({'rating': new_rating})
-                .eq('problem_name', problem_name)
-                .eq('code', code)
-                .eq('hint', hint)
-                .execute()
-            )
-    
     return {
         'success': True
     }

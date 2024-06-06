@@ -1,40 +1,42 @@
 {
-  "manifest_version": 3,
-  "name": "Beetcode",
-  "version": "1.0",
-  "description": "A better way to Leetcode",
-  "permissions": [
-    "tabs",
-    "activeTab",
-    "scripting",
-    "storage"
-  ],
-  "action": {
-    "default_popup": "popup.html",
-    "default_icon": "beet-icon-57-64x64.png"
-  },
-  "background": {
-    "service_worker": "background.js"
-  },
-  "icons": {
-    "16": "beetcode_16_16.png",
-    "32": "beet-icon-57-32x32.png",
-    "48": "beet-icon-57-64x64.png",
-    "128": "beetcode_128_128.jpg"
-  },
+    "manifest_version": 3,
+    "name": "Beetcode",
+    "version": "1.0",
+    "description": "A better way to Leetcode",
+    "permissions": [
+      "tabs",
+      "activeTab",
+      "scripting",
+      "storage"
+    ],
+    
+    "action": {
+      "default_popup": "popup.html",
+      "default_icon": "beet-icon-57-64x64.png"
+    },
+    
+    "background": {
+      "service_worker": "background.js"
+    },
   
-  "host_permissions": [
-    "*://leetcode.com/*"
-  ],
-
+    "icons": {
+      "16": "beetcode_16_16.png",
+      "32": "beet-icon-57-32x32.png",
+      "48": "beet-icon-57-64x64.png",
+      "128": "beetcode_128_128.jpg"
+    },
+  
+    "host_permissions": [
+        "*://leetcode.com/*"
+    ],
+    
   "content_scripts": [
-    {
-      "matches": [
-        "*://leetcode.com/problems/*"
-      ],
-      "js": [
-        "content.js"
-      ]
-    }
-  ]
-}
+      {
+        "matches": ["*://leetcode.com/problems/*"],
+        "js": ["content.js"]
+        
+      }
+    ]
+  }
+  
+  
